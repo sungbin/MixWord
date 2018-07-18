@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,23 +89,61 @@ public class MixWord {
 				}
 
 				List<KoreanTokenJava> editedTokenList = this.mixWord(oldTokensList, newTokensList);
-				
+
 				int i = 0;
 				StringBuffer sb = new StringBuffer();
 				for (KoreanTokenJava temp : editedTokenList) {
 					sb.append(temp.getText().trim());
 				}
-				//sb = new StringBuffer(sb.toString().trim());
-				
-				CharSequence normalized = OpenKoreanTextProcessorJava.normalize(sb.toString());
-				System.out.println(normalized);
-				
+				// sb = new StringBuffer(sb.toString().trim());
+
+				CharSequence completedSentence = OpenKoreanTextProcessorJava.normalize(sb.toString());
+				// System.out.println(completedSentence);
+				this.makeOut(completedSentence.toString(), data);
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
+		try {
+			System.out.println("All files saved in result");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private File makeOut(String line, File file) throws IOException {
+		File curDir = new File("result");
+
+		if (!curDir.exists()) {
+			curDir.mkdir();
+		}
+
+		File newFile = new File(curDir.getAbsolutePath() + File.separator + file.getName());
+		if (newFile.exists()) {
+			if (newFile.delete()) {
+				System.out.println(newFile.getName() + "을 삭제하였습니다.");
+			} else {
+				System.out.println(newFile.getName() + "을 삭제하는데 실패하였습니다.");
+			}
+		} else {
+			System.out.println(newFile.getName() + "을 만들기 시작합니다.");
+		}
+
+		FileWriter fw = new FileWriter(newFile, false);
+
+		fw.write(line);
+		fw.flush();
+
+		fw.close();
+		System.out.println(newFile.getName() + "을 만들었습니다.");
+
+		return newFile;
+
 	}
 
 	private List<KoreanTokenJava> mixWord(List<KoreanTokenJava> oldTokensList, List<KoreanTokenJava> newTokensList) {
@@ -117,13 +156,13 @@ public class MixWord {
 		i = 0;
 		for (KoreanTokenJava word : newTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
-				//System.out.println("text: " + word.getText()+ ", i:" + i);
+				// System.out.println("text: " + word.getText()+ ", i:" + i);
 				newNounList.add(word);
 			}
 		}
 		for (KoreanTokenJava word : oldTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
-				//System.out.println("oldNoun: " + word.getText());
+				// System.out.println("oldNoun: " + word.getText());
 				oldNounList.add(word);
 				index.add(i);
 				i++;
@@ -134,7 +173,7 @@ public class MixWord {
 		for (i = 0; i < index.size(); i++) {
 			while (true) {
 				int n = rand.nextInt(index.size());
-				System.out.println("n: "+ n);
+				// System.out.println("n: "+ n);
 				if (!randomN.contains(index.get(n))) {
 					randomN.add(index.get(n));
 					break;
@@ -143,9 +182,10 @@ public class MixWord {
 		}
 		i = 0;
 		for (KoreanTokenJava keyword : newTokensList) {
-			//System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
+			// System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
 			int ranN = randomN.get(i);
-			//System.out.println("old: " + oldTokensList.get(ranN).getText() + ", new: " + keyword.getText());
+			// System.out.println("old: " + oldTokensList.get(ranN).getText() + ", new: " +
+			// keyword.getText());
 			oldTokensList.set(ranN, keyword);
 			i++;
 		}
