@@ -11,6 +11,9 @@ plugins {
     id 'java-library'
 }
 
+apply plugin: 'application'
+mainClassName = "edu.handong.isel.MixWords.MixWord"
+
 dependencies {
 	// https://mvnrepository.com/artifact/org.openkoreantext/open-korean-text
 	compile group: 'org.openkoreantext', name: 'open-korean-text', version: '2.3.0'
