@@ -1,11 +1,16 @@
 package edu.handong.isel.MixWords;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,7 +68,7 @@ public class MixWord {
 		Scanner in = new Scanner(System.in);
 		String line;
 		for (File data : datas) {
-			System.out.println(data.getAbsolutePath() + "을 분석중..");
+			System.out.println("parsing " + data.getAbsolutePath() + "...");
 
 			try {
 				String extractedLine = this.extractLineFromFile(data);
@@ -74,7 +79,7 @@ public class MixWord {
 				// this.printPoses(oldTokens);
 
 				while (true) {
-					System.out.println(data.getName() + "에 들어갈 키워드들을 입력해주세요.(exit: q), (붙혀넣기: shift+insert)");
+					System.out.println(data.getName() + ": push keywords.(end: q), (paste key: shift+insert)");
 					line = in.nextLine();
 					if (line.equals("q")) {
 						break;
@@ -126,21 +131,23 @@ public class MixWord {
 		File newFile = new File(curDir.getAbsolutePath() + File.separator + file.getName());
 		if (newFile.exists()) {
 			if (newFile.delete()) {
-				System.out.println(newFile.getName() + "을 삭제하였습니다.");
+				System.out.println("successful to delete " + newFile.getName());
 			} else {
-				System.out.println(newFile.getName() + "을 삭제하는데 실패하였습니다.");
+				System.out.println("fail to delecte " + newFile.getName());
 			}
 		} else {
-			System.out.println(newFile.getName() + "을 만들기 시작합니다.");
+			System.out.println("start making " + newFile.getName() + "..");
 		}
 
-		FileWriter fw = new FileWriter(newFile, false);
+		FileOutputStream fileOutputStream = new FileOutputStream(newFile);
+		OutputStreamWriter OutputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+		BufferedWriter bf = new BufferedWriter(OutputStreamWriter);
 
-		fw.write(line);
-		fw.flush();
+		bf.write(line);
+		bf.flush();
 
-		fw.close();
-		System.out.println(newFile.getName() + "을 만들었습니다.");
+		bf.close();
+		System.out.println(newFile.getName() + "was made");
 
 		return newFile;
 
@@ -193,19 +200,13 @@ public class MixWord {
 		return oldTokensList;
 	}
 
-	private void printPoses(Seq<KoreanToken> tokens) {
-		List<KoreanTokenJava> words = OpenKoreanTextProcessorJava.tokensToJavaKoreanTokenList(tokens);
-		for (KoreanTokenJava word : words) {
-			if (word.getPos() == KoreanPosJava.Noun)
-				System.out.println(word.getText());
-		}
-
-	}
-
 	private String extractLineFromFile(File data) throws IOException {
 		String extractedLine = "";
-
-		BufferedReader reader = new BufferedReader(new FileReader(data));
+		
+		FileInputStream fileInputStream = new FileInputStream(data);
+		InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+		BufferedReader reader = new BufferedReader(inputStreamReader);
+		
 		String line = "";
 		while ((line = reader.readLine()) != null) {
 			extractedLine += (line + " ");
@@ -221,49 +222,5 @@ public class MixWord {
 		// OpenKoreanTextProcessorJava.tokenize(normalized);
 		// return OpenKoreanTextProcessorJava.tokensToJavaStringList(tokens);
 
-	}
-
-	private void executeExample() {
-		String text = "한국어를 처리하는 예시입니닼ㅋㅋㅋㅋㅋ #한국어";
-
-		// Normalize
-		CharSequence normalized = OpenKoreanTextProcessorJava.normalize(text);
-		System.out.println(normalized);
-		// 한국어를 처리하는 예시입니다ㅋㅋ #한국어
-
-		// Tokenize
-		Seq<KoreanTokenizer.KoreanToken> tokens = OpenKoreanTextProcessorJava.tokenize(normalized);
-		System.out.println(OpenKoreanTextProcessorJava.tokensToJavaStringList(tokens));
-		// [한국어, 를, 처리, 하는, 예시, 입니, 다, ㅋㅋ, #한국어]
-		System.out.println(OpenKoreanTextProcessorJava.tokensToJavaKoreanTokenList(tokens));
-		// [한국어(Noun: 0, 3), 를(Josa: 3, 1), 처리(Noun: 5, 2), 하는(Verb(하다): 7, 2), 예시(Noun:
-		// 10, 2),
-		// 입니다(Adjective(이다): 12, 3), ㅋㅋㅋ(KoreanParticle: 15, 3), #한국어(Hashtag: 19, 4)]
-
-		// Phrase extraction
-		List<KoreanPhraseExtractor.KoreanPhrase> phrases = OpenKoreanTextProcessorJava.extractPhrases(tokens, true,
-				true);
-		System.out.println(phrases);
-		// [한국어(Noun: 0, 3), 처리(Noun: 5, 2), 처리하는 예시(Noun: 5, 7), 예시(Noun: 10, 2),
-		// #한국어(Hashtag: 18, 4)]
-
-	}
-
-	private ArrayList<String> getLine(File data) {
-		ArrayList<String> lines = new ArrayList<String>();
-		try {
-			String line;
-			////////////////////////////////////////////////////////////////
-			BufferedReader in = new BufferedReader(new FileReader(data));
-			while ((line = in.readLine()) != null) {
-				lines.add(line);
-			}
-			in.close();
-			////////////////////////////////////////////////////////////////
-		} catch (IOException e) {
-			System.err.println(e); //
-			System.exit(1);
-		}
-		return lines;
 	}
 }
