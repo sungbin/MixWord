@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -61,13 +62,14 @@ public class MixWord {
 				}
 			}
 		}
-		Seq<KoreanToken> oldTokens = null;
-		List<KoreanTokenJava> newTokensList = null;
-
-		ArrayList<String> keywords = new ArrayList<String>();
-		Scanner in = new Scanner(System.in);
-		String line;
+		
 		for (File data : datas) {
+			Seq<KoreanToken> oldTokens = null;
+			List<KoreanTokenJava> newTokensList = null;
+
+			ArrayList<String> keywords = new ArrayList<String>();
+			Scanner in = new Scanner(System.in);
+			String line;
 			System.out.println("parsing " + data.getAbsolutePath() + "...");
 
 			try {
@@ -92,7 +94,7 @@ public class MixWord {
 					else
 						newTokensList.addAll(newList);
 				}
-
+				
 				List<KoreanTokenJava> editedTokenList = this.mixWord(oldTokensList, newTokensList);
 
 				int i = 0;
@@ -160,28 +162,32 @@ public class MixWord {
 		ArrayList<KoreanTokenJava> oldNounList = new ArrayList<KoreanTokenJava>();
 		ArrayList<Integer> randomN = new ArrayList<Integer>();
 		ArrayList<Integer> index = new ArrayList<Integer>();
+		HashMap<Integer, Integer> datas = new HashMap<Integer, Integer>();
 		int i;
 		i = 0;
 		for (KoreanTokenJava word : newTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
-				// System.out.println("text: " + word.getText()+ ", i:" + i);
+//				 System.out.println("text: " + word.getText()+ ", i:" + i);
 				newNounList.add(word);
 			}
 		}
+		int j = 0;
 		for (KoreanTokenJava word : oldTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
-				// System.out.println("oldNoun: " + word.getText());
+//				 System.out.println("oldNoun: " + word.getText());
+				datas.put(i, j);
 				oldNounList.add(word);
 				index.add(i);
 				i++;
 			}
+			j++;
 		}
 
 		Random rand = new Random();
 		for (i = 0; i < index.size(); i++) {
 			while (true) {
 				int n = rand.nextInt(index.size());
-				// System.out.println("n: "+ n);
+//				 System.out.println("n: "+ n);
 				if (!randomN.contains(index.get(n))) {
 					randomN.add(index.get(n));
 					break;
@@ -190,11 +196,14 @@ public class MixWord {
 		}
 		i = 0;
 		for (KoreanTokenJava keyword : newTokensList) {
-			// System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
+//			 System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
 			int ranN = randomN.get(i);
-			// System.out.println("old: " + oldTokensList.get(ranN).getText() + ", new: " +
-			// keyword.getText());
-			oldTokensList.set(ranN, keyword);
+//			 System.out.println("old: " + oldTokensList.get(ranN).getText() + ", new: " +
+//			 System.out.println("old: " + oldNounList.get(ranN).getText() + ", new: " +
+//			 keyword.getText());
+//			 System.out.println("저장될: "+oldTokensList.get(datas.get(ranN)).getText());
+			 oldTokensList.set(datas.get(ranN), keyword);
+//			oldTokensList.set(ranN, keyword);
 			i++;
 		}
 
