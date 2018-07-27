@@ -164,7 +164,7 @@ public class MixWord {
 
 	}
 
-	private List<KoreanTokenJava> mixWord(List<KoreanTokenJava> oldTokensList, List<KoreanTokenJava> newTokensList) {
+	private List<KoreanTokenJava> mixWord(List<KoreanTokenJava> oldTokensList, List<String> keywords) {
 
 		ArrayList<KoreanTokenJava> newNounList = new ArrayList<KoreanTokenJava>();
 		ArrayList<KoreanTokenJava> oldNounList = new ArrayList<KoreanTokenJava>();
@@ -172,12 +172,12 @@ public class MixWord {
 		ArrayList<Integer> index = new ArrayList<Integer>();
 		int i;
 		i = 0;
-		for (KoreanTokenJava word : newTokensList) {
-			if (word.getPos() == KoreanPosJava.Noun) {
-				// System.out.println("text: " + word.getText()+ ", i:" + i);
-				newNounList.add(word);
-			}
-		}
+//		for (String word : keywords) {
+//			if (word.getPos() == KoreanPosJava.Noun) {
+//				// System.out.println("text: " + word.getText()+ ", i:" + i);
+//				newNounList.add(word);
+//			}
+//		}
 		for (KoreanTokenJava word : oldTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
 				// System.out.println("oldNoun: " + word.getText());
