@@ -62,9 +62,9 @@ public class MixWord {
 			}
 		}
 		Seq<KoreanToken> oldTokens = null;
-		List<KoreanTokenJava> newTokensList = null;
+		// List<KoreanTokenJava> newTokensList = null;
 
-		ArrayList<String> keywords = new ArrayList<String>();
+		List<String> keywords = new ArrayList<String>();
 		Scanner in = new Scanner(System.in);
 		String line;
 		for (File data : datas) {
@@ -85,12 +85,21 @@ public class MixWord {
 						break;
 					}
 
+					// **-> 여기서부터 편집하면 됨.
+
 					List<KoreanTokenJava> newList = OpenKoreanTextProcessorJava
 							.tokensToJavaKoreanTokenList(this.tokenization(line));
 					if (newTokensList == null)
 						newTokensList = newList;
 					else
 						newTokensList.addAll(newList);
+
+					// List<KoreanTokenJava> newList = OpenKoreanTextProcessorJava
+					// .tokensToJavaKoreanTokenList(this.tokenization(line));
+					// if (newTokensList == null)
+					// newTokensList = newList;
+					// else
+					// newTokensList.addAll(newList);
 				}
 
 				List<KoreanTokenJava> editedTokenList = this.mixWord(oldTokensList, newTokensList);
@@ -102,9 +111,11 @@ public class MixWord {
 				}
 				// sb = new StringBuffer(sb.toString().trim());
 
-				CharSequence completedSentence = OpenKoreanTextProcessorJava.normalize(sb.toString());
-				// System.out.println(completedSentence);
-				this.makeOut(completedSentence.toString(), data);
+				this.makeOut(sb.toString(), data);
+
+				// CharSequence completedSentence =
+				// OpenKoreanTextProcessorJava.normalize(sb.toString());
+				// this.makeOut(completedSentence.toString(), data);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -202,11 +213,11 @@ public class MixWord {
 
 	private String extractLineFromFile(File data) throws IOException {
 		String extractedLine = "";
-		
+
 		FileInputStream fileInputStream = new FileInputStream(data);
 		InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
 		BufferedReader reader = new BufferedReader(inputStreamReader);
-		
+
 		String line = "";
 		while ((line = reader.readLine()) != null) {
 			extractedLine += (line + " ");
