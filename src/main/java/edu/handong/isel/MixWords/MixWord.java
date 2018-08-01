@@ -63,12 +63,9 @@ public class MixWord {
 				}
 			}
 		}
+		int i;
 		System.out.println(datas);
-		int i = 0;
 		for (File data : datas) {
-			i++;
-//			if(i >1)
-//				break;
 			Seq<KoreanToken> oldTokens = null;
 			List<KoreanTokenJava> newTokensList = null;
 
@@ -91,16 +88,16 @@ public class MixWord {
 					if (line.equals("q")) {
 						break;
 					}
-					
+
 					ArrayList<String> keywordList = this.tokenizeNewLine(line);
 					List<KoreanTokenJava> newList = this.convertStringListToTokenList(keywordList);
-					
+
 					if (newTokensList == null)
 						newTokensList = newList;
 					else
 						newTokensList.addAll(newList);
 				}
-				
+
 				List<KoreanTokenJava> editedTokenList = this.mixWord(oldTokensList, newTokensList);
 
 				StringBuffer sb = new StringBuffer();
@@ -108,11 +105,10 @@ public class MixWord {
 				for (i = 1; i < editedTokenList.size(); i++) {
 					KoreanTokenJava first = editedTokenList.get(i - 1);
 					KoreanTokenJava second = editedTokenList.get(i);
-					
-					if(second.getPos() == KoreanPosJava.Punctuation) {
+
+					if (second.getPos() == KoreanPosJava.Punctuation) {
 						sb.append("");
-					}
-					else if(first.getPos() == KoreanPosJava.Punctuation) {
+					} else if (first.getPos() == KoreanPosJava.Punctuation) {
 						sb.append(" ");
 					} else if ((first.getPos() == KoreanPosJava.Noun) && (second.getPos() == KoreanPosJava.Noun)) {
 						sb.append(" ");
@@ -129,11 +125,11 @@ public class MixWord {
 					sb.append(second.getText());
 
 				}
-				
-				String finalString = sb.toString().replaceAll("  ", " ");
 
-//				System.out.println(finalString);
+				String finalString = sb.toString().replaceAll("  ", " ");
 				
+				System.out.println(finalString);
+
 				this.makeOut(finalString, data);
 
 			} catch (IOException e) {
@@ -150,14 +146,27 @@ public class MixWord {
 			e.printStackTrace();
 		}
 	}
-	
+
+	private String detokenizeFromKoreanTokenList(List<KoreanTokenJava> editedTokenList) {
+		StringBuffer sb = new StringBuffer();
+		int i = 0;
+		for (KoreanTokenJava token : editedTokenList) {
+			if (i != token.getOffset()) {
+				sb.append(" ");
+			}
+			sb.append(token.getText());
+			i += token.getLength();
+		}
+		return sb.toString();
+	}
+
 	private List<KoreanTokenJava> convertStringListToTokenList(ArrayList<String> keywordList) {
 		ArrayList<KoreanTokenJava> newList = new ArrayList<KoreanTokenJava>();
-		
-		for(String keyword : keywordList) {
+
+		for (String keyword : keywordList) {
 			newList.add(new KoreanTokenJava(keyword, KoreanPosJava.Noun, 0, keyword.length(), false, ""));
 		}
-		
+
 		return newList;
 	}
 
@@ -167,7 +176,7 @@ public class MixWord {
 		int i;
 		ArrayList<String> list = new ArrayList<String>();
 		while (tokenizer.hasMoreTokens()) {
-//			System.out.println(tokenizer.nextToken());
+			// System.out.println(tokenizer.nextToken());
 			list.add(tokenizer.nextToken());
 		}
 		return list;
@@ -216,14 +225,14 @@ public class MixWord {
 		i = 0;
 		for (KoreanTokenJava word : newTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
-//				 System.out.println("text: " + word.getText()+ ", i:" + i);
+				// System.out.println("text: " + word.getText()+ ", i:" + i);
 				newNounList.add(word);
 			}
 		}
 		int j = 0;
 		for (KoreanTokenJava word : oldTokensList) {
 			if (word.getPos() == KoreanPosJava.Noun) {
-//				 System.out.println("oldNoun: " + word.getText());
+				// System.out.println("oldNoun: " + word.getText());
 				datas.put(i, j);
 				oldNounList.add(word);
 				index.add(i);
@@ -236,7 +245,7 @@ public class MixWord {
 		for (i = 0; i < index.size(); i++) {
 			while (true) {
 				int n = rand.nextInt(index.size());
-//				 System.out.println("n: "+ n);
+				// System.out.println("n: "+ n);
 				if (!randomN.contains(index.get(n))) {
 					randomN.add(index.get(n));
 					break;
@@ -245,11 +254,11 @@ public class MixWord {
 		}
 		i = 0;
 		for (KoreanTokenJava keyword : newTokensList) {
-//			 System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
+			// System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
 			int ranN = randomN.get(i);
-//			 System.out.print("old: " + oldNounList.get(ranN));
-//			 System.out.println(", new: " +keyword.toString());
-			 oldTokensList.set(datas.get(ranN), keyword);
+			// System.out.print("old: " + oldNounList.get(ranN));
+			// System.out.println(", new: " +keyword.toString());
+			oldTokensList.set(datas.get(ranN), keyword);
 			i++;
 		}
 
@@ -258,11 +267,11 @@ public class MixWord {
 
 	private String extractLineFromFile(File data) throws IOException {
 		String extractedLine = "";
-		
+
 		FileInputStream fileInputStream = new FileInputStream(data);
 		InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
 		BufferedReader reader = new BufferedReader(inputStreamReader);
-		
+
 		String line = "";
 		while ((line = reader.readLine()) != null) {
 			extractedLine += (line + " ");
