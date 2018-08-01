@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import org.openkoreantext.processor.KoreanPosJava;
 import org.openkoreantext.processor.KoreanTokenJava;
@@ -62,8 +63,12 @@ public class MixWord {
 				}
 			}
 		}
-		
+		System.out.println(datas);
+		int i = 0;
 		for (File data : datas) {
+			i++;
+//			if(i >1)
+//				break;
 			Seq<KoreanToken> oldTokens = null;
 			List<KoreanTokenJava> newTokensList = null;
 
@@ -86,9 +91,13 @@ public class MixWord {
 					if (line.equals("q")) {
 						break;
 					}
-
-					List<KoreanTokenJava> newList = OpenKoreanTextProcessorJava
-							.tokensToJavaKoreanTokenList(this.tokenization(line));
+					
+					ArrayList<String> keywordList = this.tokenizeNewLine(line);
+					List<KoreanTokenJava> newList = this.convertStringListToTokenList(keywordList);
+					
+//					List<KoreanTokenJava> newList 
+//					= OpenKoreanTextProcessorJava
+//							.tokensToJavaKoreanTokenList(this.tokenization(line));
 					if (newTokensList == null)
 						newTokensList = newList;
 					else
@@ -97,7 +106,6 @@ public class MixWord {
 				
 				List<KoreanTokenJava> editedTokenList = this.mixWord(oldTokensList, newTokensList);
 
-				int i = 0;
 				StringBuffer sb = new StringBuffer();
 				for (KoreanTokenJava temp : editedTokenList) {
 					sb.append(temp.getText().trim());
@@ -122,6 +130,28 @@ public class MixWord {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private List<KoreanTokenJava> convertStringListToTokenList(ArrayList<String> keywordList) {
+		ArrayList<KoreanTokenJava> newList = new ArrayList<KoreanTokenJava>();
+		
+		for(String keyword : keywordList) {
+			newList.add(new KoreanTokenJava(keyword, KoreanPosJava.Noun, 0, keyword.length(), false, ""));
+		}
+		
+		return newList;
+	}
+
+	private ArrayList<String> tokenizeNewLine(String str) {
+		StringTokenizer tokenizer = new StringTokenizer(str);
+
+		int i;
+		ArrayList<String> list = new ArrayList<String>();
+		while (tokenizer.hasMoreTokens()) {
+//			System.out.println(tokenizer.nextToken());
+			list.add(tokenizer.nextToken());
+		}
+		return list;
 	}
 
 	private File makeOut(String line, File file) throws IOException {
@@ -150,7 +180,7 @@ public class MixWord {
 		bf.flush();
 
 		bf.close();
-		System.out.println(newFile.getName() + "was made");
+		System.out.println(newFile.getName() + " was made");
 
 		return newFile;
 
@@ -199,8 +229,13 @@ public class MixWord {
 //			 System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
 			int ranN = randomN.get(i);
 //			 System.out.println("old: " + oldTokensList.get(ranN).getText() + ", new: " +
-//			 System.out.println("old: " + oldNounList.get(ranN).getText() + ", new: " +
-//			 keyword.getText());
+			 System.out.print("old: " + oldNounList.get(ranN));
+//			 System.out.println(oldNounList.get(ranN).getPos());
+//			 System.out.println(oldNounList.get(ranN).getOffset());
+//			 System.out.println(oldNounList.get(ranN).getLength());
+//			 System.out.println(oldNounList.get(ranN).isUnknown());
+//			 System.out.println(oldNounList.get(ranN).getStem());
+			 System.out.println(", new: " +keyword.toString());
 //			 System.out.println("저장될: "+oldTokensList.get(datas.get(ranN)).getText());
 			 oldTokensList.set(datas.get(ranN), keyword);
 //			oldTokensList.set(ranN, keyword);
