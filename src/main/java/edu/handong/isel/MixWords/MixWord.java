@@ -130,13 +130,11 @@ public class MixWord {
 
 				}
 				
-				String finalString = sb.toString().replaceAll("  ", " ");
+				String finalString = sb.toString().replaceAll("  ", " ");
+
+//				System.out.println(finalString);
 				
-				
-				CharSequence normalized = OpenKoreanTextProcessorJava.normalize(finalString);
-				this.makeOut(normalized.toString(), data);
-				
-//				this.makeOut(sb.toString(), data);
+				this.makeOut(finalString, data);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
