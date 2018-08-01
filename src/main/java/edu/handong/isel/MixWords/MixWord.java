@@ -130,7 +130,10 @@ public class MixWord {
 
 				}
 				
-				CharSequence normalized = OpenKoreanTextProcessorJava.normalize(sb.toString());
+				String finalString = sb.toString().replaceAll("  ", " ");
+				
+				
+				CharSequence normalized = OpenKoreanTextProcessorJava.normalize(finalString);
 				this.makeOut(normalized.toString(), data);
 				
 //				this.makeOut(sb.toString(), data);
