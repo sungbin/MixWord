@@ -95,9 +95,6 @@ public class MixWord {
 					ArrayList<String> keywordList = this.tokenizeNewLine(line);
 					List<KoreanTokenJava> newList = this.convertStringListToTokenList(keywordList);
 					
-//					List<KoreanTokenJava> newList 
-//					= OpenKoreanTextProcessorJava
-//							.tokensToJavaKoreanTokenList(this.tokenization(line));
 					if (newTokensList == null)
 						newTokensList = newList;
 					else
@@ -107,15 +104,34 @@ public class MixWord {
 				List<KoreanTokenJava> editedTokenList = this.mixWord(oldTokensList, newTokensList);
 
 				StringBuffer sb = new StringBuffer();
-				for (KoreanTokenJava temp : editedTokenList) {
-					sb.append(temp.getText().trim());
-				}
-				// sb = new StringBuffer(sb.toString().trim());
+				sb.append(editedTokenList.get(0).getText());
+				for (i = 1; i < editedTokenList.size(); i++) {
+					KoreanTokenJava first = editedTokenList.get(i - 1);
+					KoreanTokenJava second = editedTokenList.get(i);
+					
+					if(second.getPos() == KoreanPosJava.Punctuation) {
+						sb.append("");
+					} 
+					else if ((first.getPos() == KoreanPosJava.Noun) && (second.getPos() == KoreanPosJava.Noun))
+						sb.append(" ");
+					else if (first.getPos() == KoreanPosJava.Josa) {
+						sb.append(" ");
+					} else if (first.getPos() == KoreanPosJava.Adjective) {
+						sb.append(" ");
+					} else if (first.getPos() == KoreanPosJava.Verb) {
+						sb.append(" ");
+					} else if (first.getPos() == KoreanPosJava.Adverb) {
+						sb.append(" ");
+					}
 
-//				CharSequence completedSentence = OpenKoreanTextProcessorJava.normalize(sb.toString());
+					sb.append(second.getText());
+
+				}
 				
-				// System.out.println(completedSentence);
-				this.makeOut(sb.toString(), data);
+				CharSequence normalized = OpenKoreanTextProcessorJava.normalize(sb.toString());
+				this.makeOut(normalized.toString(), data);
+				
+//				this.makeOut(sb.toString(), data);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
