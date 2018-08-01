@@ -114,10 +114,9 @@ public class MixWord {
 					}
 					else if(first.getPos() == KoreanPosJava.Punctuation) {
 						sb.append(" ");
-					} 
-					else if ((first.getPos() == KoreanPosJava.Noun) && (second.getPos() == KoreanPosJava.Noun))
+					} else if ((first.getPos() == KoreanPosJava.Noun) && (second.getPos() == KoreanPosJava.Noun)) {
 						sb.append(" ");
-					else if (first.getPos() == KoreanPosJava.Josa) {
+					} else if (first.getPos() == KoreanPosJava.Josa) {
 						sb.append(" ");
 					} else if (first.getPos() == KoreanPosJava.Adjective) {
 						sb.append(" ");
