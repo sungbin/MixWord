@@ -111,6 +111,9 @@ public class MixWord {
 					
 					if(second.getPos() == KoreanPosJava.Punctuation) {
 						sb.append("");
+					}
+					else if(first.getPos() == KoreanPosJava.Punctuation) {
+						sb.append(" ");
 					} 
 					else if ((first.getPos() == KoreanPosJava.Noun) && (second.getPos() == KoreanPosJava.Noun))
 						sb.append(" ");
