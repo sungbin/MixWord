@@ -228,17 +228,9 @@ public class MixWord {
 		for (KoreanTokenJava keyword : newTokensList) {
 //			 System.out.println("i: " + i + ", randomN.get(i): " + randomN.get(i));
 			int ranN = randomN.get(i);
-//			 System.out.println("old: " + oldTokensList.get(ranN).getText() + ", new: " +
-			 System.out.print("old: " + oldNounList.get(ranN));
-//			 System.out.println(oldNounList.get(ranN).getPos());
-//			 System.out.println(oldNounList.get(ranN).getOffset());
-//			 System.out.println(oldNounList.get(ranN).getLength());
-//			 System.out.println(oldNounList.get(ranN).isUnknown());
-//			 System.out.println(oldNounList.get(ranN).getStem());
-			 System.out.println(", new: " +keyword.toString());
-//			 System.out.println("저장될: "+oldTokensList.get(datas.get(ranN)).getText());
+//			 System.out.print("old: " + oldNounList.get(ranN));
+//			 System.out.println(", new: " +keyword.toString());
 			 oldTokensList.set(datas.get(ranN), keyword);
-//			oldTokensList.set(ranN, keyword);
 			i++;
 		}
 
@@ -263,9 +255,6 @@ public class MixWord {
 	private Seq<KoreanTokenizer.KoreanToken> tokenization(String line) {
 		CharSequence normalized = OpenKoreanTextProcessorJava.normalize(line);
 		return OpenKoreanTextProcessorJava.tokenize(normalized);
-		// Seq<KoreanTokenizer.KoreanToken> tokens =
-		// OpenKoreanTextProcessorJava.tokenize(normalized);
-		// return OpenKoreanTextProcessorJava.tokensToJavaStringList(tokens);
 
 	}
 }
