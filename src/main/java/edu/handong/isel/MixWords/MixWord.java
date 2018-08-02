@@ -105,7 +105,9 @@ public class MixWord {
 				for (i = 1; i < editedTokenList.size(); i++) {
 					KoreanTokenJava first = editedTokenList.get(i - 1);
 					KoreanTokenJava second = editedTokenList.get(i);
-
+					
+//					System.out.println(first + "@@ " + second);
+					
 					if (second.getPos() == KoreanPosJava.Punctuation) {
 						sb.append("");
 					} else if (first.getPos() == KoreanPosJava.Punctuation) {
@@ -116,6 +118,8 @@ public class MixWord {
 						sb.append(" ");
 					} else if (first.getPos() == KoreanPosJava.Adjective) {
 						sb.append(" ");
+					} else if (second.getPos() == KoreanPosJava.Adjective) {
+						sb.append(" ");
 					} else if (first.getPos() == KoreanPosJava.Verb) {
 						sb.append(" ");
 					} else if (first.getPos() == KoreanPosJava.Adverb) {
@@ -123,14 +127,25 @@ public class MixWord {
 					}
 
 					sb.append(second.getText());
-
 				}
 
 				String finalString = sb.toString().replaceAll("  ", " ");
-				
 				System.out.println(finalString);
 
 				this.makeOut(finalString, data);
+				
+				/* 띄어쓰기 제거 */
+				//String finalString = this.parseKoreanSpacing(sb.toString());
+//				for(KoreanTokenJava temp : editedTokenList) {
+//					sb.append(temp.getText().trim());
+//				}
+//				String finalString = sb.toString().replace(" ", "");
+//				
+//				String ffinalString = this.parseKoreanSpacing(finalString);
+//				
+//				System.out.println(ffinalString);
+//
+//				this.makeOut(ffinalString, data);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -145,6 +160,11 @@ public class MixWord {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private String parseKoreanSpacing(String string) {
+		
+		return null;
 	}
 
 	private String detokenizeFromKoreanTokenList(List<KoreanTokenJava> editedTokenList) {
@@ -258,7 +278,14 @@ public class MixWord {
 			int ranN = randomN.get(i);
 			// System.out.print("old: " + oldNounList.get(ranN));
 			// System.out.println(", new: " +keyword.toString());
-			oldTokensList.set(datas.get(ranN), keyword);
+
+			// oldTokensList.set(datas.get(ranN), keyword);
+			oldTokensList.add(datas.get(ranN) - 1, keyword);
+
+			if (randomN.get(i) < randomN.get(i + 1)) {
+				randomN.set(i + 1, randomN.get(i + 1) + 1);
+			}
+
 			i++;
 		}
 
